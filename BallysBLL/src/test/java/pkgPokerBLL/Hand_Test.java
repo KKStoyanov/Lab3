@@ -9,6 +9,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import PkgException.DeckException;
+import PkgException.HandException;
+import PkgException.exHand;
 import pkgPokerEnum.eHandStrength;
 import pkgPokerEnum.eRank;
 import pkgPokerEnum.eSuit;
@@ -35,12 +38,45 @@ public class Hand_Test {
 	@After
 	public void tearDown() throws Exception {
 	}
+	
+	@Test(expected = DeckException.class)
+	public void TestCardsInDeck() throws DeckException{
+		 Deck d = new Deck();
+		 d.removeCards();
+		 d.DrawCard();
+	
+	}
 
+	@Test(expected = HandException.class)
+	public void TestCardsInHand() throws HandException{
+		Hand h = new Hand();
+		h.AddToCardsInHand(new Card(eSuit.SPADES, eRank.ACE,1));
+		h.AddToCardsInHand(new Card(eSuit.HEARTS, eRank.ACE,1));
+		h.AddToCardsInHand(new Card(eSuit.DIAMONDS, eRank.ACE,1));
+		h.AddToCardsInHand(new Card(eSuit.CLUBS, eRank.ACE,1));
+		h.EvaluateHand();
 	
-
+	}
 	
 	
+	@Test
+	public void TestFiveOfAKind() {
+		Hand h = new Hand();
+		h.AddToCardsInHand(new Card(eSuit.SPADES, eRank.ACE,1));
+		h.AddToCardsInHand(new Card(eSuit.HEARTS, eRank.ACE,1));
+		h.AddToCardsInHand(new Card(eSuit.DIAMONDS, eRank.ACE,1));
+		h.AddToCardsInHand(new Card(eSuit.CLUBS, eRank.ACE,1));
+		h.AddToCardsInHand(new Card(eSuit.JOKER, eRank.JOKER,1));
+		
+		try {
+			h = h.EvaluateHand();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	
+		assertTrue(h.getHandScore().getHandStrength() == eHandStrength.FiveOfAKind);
+		assertTrue(h.getHandScore().getHiHand() == eRank.ACE);
+	}
 	
 	@Test
 	public void TestRodyalFlush() {
@@ -85,7 +121,7 @@ public class Hand_Test {
 	@Test
 	public void TestFourOfAKind() {
 		Hand h = new Hand();
-		h.AddToCardsInHand(new Card(eSuit.SPADES, eRank.TEN,1));
+		h.AddToCardsInHand(new Card(eSuit.JOKER, eRank.JOKER,1));
 		h.AddToCardsInHand(new Card(eSuit.HEARTS, eRank.TEN,1));
 		h.AddToCardsInHand(new Card(eSuit.DIAMONDS, eRank.TEN,1));
 		h.AddToCardsInHand(new Card(eSuit.CLUBS, eRank.TEN,1));
